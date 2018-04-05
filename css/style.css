@@ -1,10 +1,13 @@
 body {
   text-align: center;
 }
-
 .first-canvas {
   background-color: black;
-  overflow: hidden;/*hides portions of game outside of viewport*/
+  overflow: hidden; /*hides portions of game outside of viewport*/
   position: relative;
 }
 
+.win {
+  background-color: red;
+  position: fixed;
+}
