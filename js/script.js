@@ -7,8 +7,7 @@ function drawMap(levelArray) {
       var ch = line[x];
       if (ch === "x") {
         // identify as wall + draw tile 20 by 20
-        ctx.fillStyle = "#C9D6D4";
-        ctx.fillRect(x * 20, y * 20, 20, 20);
+        ctx.drawImage(wallTile, wallPosX, wallPosY, 20, 20);
         wallPosX = x * 20;
         wallPosY = y * 20;
         if (mapGenerated === false) {
@@ -16,8 +15,7 @@ function drawMap(levelArray) {
         }
       } else if (ch === "!") {
         // identify as acid + draw tile 20 by 20
-        ctx.fillStyle = "#7DFF00";
-        ctx.fillRect(x * 20, y * 20, 20, 20);
+        ctx.drawImage(acidTile, acidPosX, acidPosY, 20, 20);
         acidPosX = x * 20;
         acidPosY = y * 20;
         if (mapGenerated === false) {
@@ -29,12 +27,10 @@ function drawMap(levelArray) {
         ctx.fillRect(x * 20, y * 20, 15, 30);
       } else if (ch === "o") {
         // identify as relics
-        // ctx.fillStyle = "#E8E300";
-        // ctx.fillRect(x * 20 + 5, y * 20, 10, 10);
-        coinPosX = x * 20 + 5;
-        coinPosY = y * 20;
+        coinPosX = x * 20;
+        coinPosY = y * 20 - 5;
         if (mapGenerated === false) {
-          coins.push(new Coin(coinPosX, coinPosY, 10, 10));
+          coins.push(new Coin(coinPosX, coinPosY, 20, 20));
         }
       } else if (ch === "v") {
         // identify as falling blocks
@@ -58,9 +54,6 @@ function updateStuff() {
 
   // player initialisation
   player.drawMe();
-  // to be deleted  testPos();
-  // to be deleted  testCol();
-  // to be deleted  testTop();
 
   // collisions
   wallCollision();
@@ -87,12 +80,3 @@ function updateStuff() {
 }
 
 updateStuff();
-
-// Next steps:
-// 1. define a constructor collision function to apply to each tile of the map
-// 2. create and initialize player and player movements
-// 3. animate lava
-// 4. animate coins with wobble
-// 5. animate captive delivrance
-
-// drawMap(levelMap);

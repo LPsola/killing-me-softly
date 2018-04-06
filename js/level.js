@@ -4,10 +4,16 @@ canvas.width = 1200;
 canvas.height = 600;
 var ctx = canvas.getContext("2d");
 
+// legend:
+//          x = platform
+//          ! = lava
+//          v = falling block
+//          o = relics
+
 var levelMap = [
   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "xxxxxxxxxxxxxxxxxxx vvvvvvvvvv                              ",
-  "                                                         #  ",
+  "                                                            ",
   "vvvxxxvvv vv vv vvv                    o o o o o            ",
   " o xxx                         xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "                       xxx     xvvvvv                 vvvv  ",
@@ -38,9 +44,13 @@ var levelMap = [
 ];
 
 // Player initialization
+
+var playerShip = new Image();
+playerShip.src = "./images/DurrrSpaceShip_0.png";
+
 var player = {
   x: 3 * 20 + 3,
-  y: 26 * 20 + 5,
+  y: 26 * 20 - 5,
   width: 15,
   height: 30,
   speedX: 1,
@@ -53,8 +63,7 @@ var player = {
   acidCollision: false,
   fireBallCollision: false,
   drawMe: function() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(playerShip, this.x, this.y, this.width, this.height);
   }
 };
 
@@ -69,28 +78,17 @@ function playerMoveY() {
     player.speedY += player.acceleration;
   }
 }
-// to be deleted var oldPosX;
-// to be deleted var oldPosY;
+
 var playerPosX = [player.x];
 var playerPosY = [player.y];
 var topOrBottom = [];
 var leftOrRight = [];
-
-// to be deleted var playerCol = [player.wallCollision];
-
-// to be deleted function testPos() {
-//  to be deleted  console.log(playerPosY);
-// to be deleted }
-
-// to be deleted function testCol() {
-// to be deleted  console.log(playerCol);
-//to be deleted  }
-
-// to be deleted function testTop() {
-// to be deleted   console.log(topOrBottom[topOrBottom.length - 1]);
-//to be deleted  }
+var playerMovX = [player.x];
+var playerMovY = [player.y];
 
 // Fireball initialization
+var acidDrop = new Image();
+acidDrop.src = "./images/acid drop.png";
 
 var fireBallPosX = 0;
 var fireBallPosY = 0;
@@ -119,11 +117,13 @@ function FireBall(myX, myY, myW, myH) {
 }
 
 FireBall.prototype.drawBall = function() {
-  ctx.fillStyle = "#FFF";
-  ctx.fillRect(this.x, this.y, this.width, this.height);
+  ctx.drawImage(acidDrop, this.x, this.y, this.width, this.height);
 };
 
 // Walls
+
+var wallTile = new Image();
+wallTile.src = "./images/bg/wall tile.png";
 
 var wallPosX = 0;
 var wallPosY = 0;
@@ -137,13 +137,14 @@ function Wall(myX, myY, myW, myH) {
   this.height = myH;
 }
 
+var acidTimer = 0;
+
 function wallCollision() {
   walls.forEach(function(oneWall) {
     if (collision(player, oneWall)) {
       player.wallCollision = true;
       playerPosY.push(player.y);
       playerPosX.push(player.x);
-      // to be deleted  playerCol.push(player.wallCollision);
     }
     fireBalls.forEach(function(oneFireBall) {
       if (collision(oneFireBall, oneWall) || oneFireBall.y > canvas.height) {
@@ -151,15 +152,22 @@ function wallCollision() {
         oneFireBall.y = oneFireBall.oy;
       }
       if (collision(player, oneFireBall)) {
-        player.fireBallCollision = true;
-        player.x = 3 * 20 + 3;
-        player.y = 26 * 20 + 5;
+        player.height += 0.001;
+        player.width += 0.001;
+        if (player.height > 90 && player.width > 45) {
+          player.x = 3 * 20 + 3;
+          player.y = 26 * 20 - 5;
+        }
+        player.FireBall = false;
       }
     });
   });
 }
 
 // Acid
+
+var acidTile = new Image();
+acidTile.src = "./images/bg/water tile.png";
 
 var acidPosX = 0;
 var acidPosY = 0;
@@ -178,13 +186,16 @@ function acidCollision() {
     if (collision(player, oneAcid)) {
       player.acidCollision = true;
       player.x = 3 * 20 + 3;
-      player.y = 26 * 20 + 5;
-      // to be deleted  playerCol.push(player.wallCollision);
+      player.y = 26 * 20 - 5;
+      player.width = 15;
+      player.height = 30;
     }
   });
 }
 
 // Coins
+var coinTile = new Image();
+coinTile.src = "./images/coin.png";
 
 var coinPosX = 0;
 var coinPosY = 0;
@@ -201,23 +212,20 @@ function Coin(myX, myY, myW, myH) {
 }
 
 Coin.prototype.drawCoin = function() {
-  ctx.fillStyle = "#E8E300";
-  ctx.fillRect(this.x, this.y, this.width, this.height);
+  ctx.drawImage(coinTile, this.x, this.y, this.width, this.height);
 };
 
 function coinCollision() {
-  // var collidedCoin = [];
   coins.forEach(function(oneCoin) {
     if (collision(player, oneCoin)) {
       coins.splice(coins.indexOf(oneCoin), 1);
       coinCounter += 1;
-      // to be deleted  playerCol.push(player.wallCollision);
+      if (player.width > 7.5 && player.height > 15) {
+        player.width -= 5;
+        player.height -= 5;
+      }
     }
-
-    // collidedCoin.pop();
   });
-
-  // collidedCoin.pop();
 }
 
 // start Game
@@ -287,7 +295,6 @@ body.onkeydown = function() {
       ) {
         player.y = playerPosY[playerPosY.length - 1] + player.speedY;
         player.wallCollision = false;
-        // to be deleted  playerCol.push(player.wallCollision);
         topOrBottom.push("top");
         break;
       }
@@ -295,7 +302,7 @@ body.onkeydown = function() {
       playerMoveX();
       playerMoveY();
       topOrBottom.push("top");
-      // to be deleted  playerPosY.push(player.y);
+      playerMovY.push(player.y);
       break;
     case 65:
     case 37:
@@ -306,7 +313,6 @@ body.onkeydown = function() {
       ) {
         player.x = playerPosX[playerPosX.length - 1] + player.speedX;
         player.wallCollision = false;
-        // to be deleted  playerCol.push(player.wallCollision);
         leftOrRight.push("left");
         break;
       }
@@ -314,6 +320,7 @@ body.onkeydown = function() {
       playerMoveX();
       playerMoveY();
       leftOrRight.push("left");
+      playerMovX.push(player.x);
       break;
     case 83:
     case 40:
@@ -324,7 +331,6 @@ body.onkeydown = function() {
       ) {
         player.y = playerPosY[playerPosY.length - 1] - player.speedY;
         player.wallCollision = false;
-        // to be deleted  playerCol.push(player.wallCollision);
         topOrBottom.push("bottom");
         break;
       }
@@ -332,7 +338,7 @@ body.onkeydown = function() {
       playerMoveX();
       playerMoveY();
       topOrBottom.push("bottom");
-      // to be deleted  playerPosY.push(player.y);
+      playerMovY.push(player.y);
       break;
     case 68:
     case 39:
@@ -343,7 +349,6 @@ body.onkeydown = function() {
       ) {
         player.x = playerPosX[playerPosX.length - 1] - player.speedX;
         player.wallCollision = false;
-        // to be deleted  playerCol.push(player.wallCollision);
         leftOrRight.push("right");
         break;
       }
@@ -351,14 +356,7 @@ body.onkeydown = function() {
       playerMoveX();
       playerMoveY();
       leftOrRight.push("right");
+      playerMovX.push(player.x);
       break;
   }
 };
-
-// legend:
-//          x = platform
-//          ! = lava
-//          @ = player starting point
-//          v = falling block
-//          o = relics
-//          # = prisoner that must be saved by collecting all relics
