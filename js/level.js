@@ -239,7 +239,6 @@ $("#StartButton").click(function() {
 // End Game
 function win() {
   if (coinCounter === totalCoins) {
-    console.log("win");
     youWinText();
   }
 }

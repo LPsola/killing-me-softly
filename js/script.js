@@ -72,6 +72,14 @@ function updateStuff() {
     oneCoin.drawCoin();
   });
 
+  // no exit
+  if (player.x >= 1200 - player.width) {
+    player.x -= player.width;
+  }
+  if (player.x <= 0) {
+    player.x += player.width;
+  }
+
   requestAnimationFrame(function() {
     updateStuff();
   });
