@@ -1,13 +1,27 @@
 body {
   text-align: center;
 }
+
 .first-canvas {
+  margin: 20px;
   background-color: black;
   overflow: hidden; /*hides portions of game outside of viewport*/
   position: relative;
 }
 
-.win {
-  background-color: red;
-  position: fixed;
+.splashscreen {
+  width: 1200px;
+  background-color: black;
+  background-image: url("../images/bg/start-bg.gif");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 20px auto;
+  position: relative;
+  height: 600px;
+}
+
+.logo {
+  margin-top: 200px;
+  padding-bottom: 50px;
 }

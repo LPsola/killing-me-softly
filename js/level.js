@@ -14,11 +14,11 @@ var levelMap = [
   "                               x                            ",
   "      xxxxxxxxxxxxx     o      x                            ",
   "      x!! vvv     x !!!!!!!!!!!x     xxxxxxxxxxxxxxxxx     o",
-  "   xxxx!!         x            x     xv v                   ",
+  "   xxxx!!         x            x     x  v                   ",
   "   x!!!!!o   xx   x           ox     x                      ",
   "   x!!!!!x   xx   xxxxxxxxxxxxxx     x                      ",
   "   x!!!!!!!!!xx   xxxxxxxxxxxxxx     x   xxxxxxxxxxxxxxxxxxx",
-  "   xxxxxxxxxxxx   vvvv                 x                    ",
+  "   xxxxxxxxxxxx   v v                  x                    ",
   "                                     x                      ",
   "                      !!!!!!!!!!!!!!!x                      ",
   "                      xxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxx",
@@ -205,36 +205,47 @@ Coin.prototype.drawCoin = function() {
   ctx.fillRect(this.x, this.y, this.width, this.height);
 };
 
-function win() {
-  if (coinCounter === totalCoins) {
-    console.log("win");
-  }
-}
-
 function coinCollision() {
   // var collidedCoin = [];
   coins.forEach(function(oneCoin) {
     if (collision(player, oneCoin)) {
       coins.splice(coins.indexOf(oneCoin), 1);
       coinCounter += 1;
-      youWinText();
-
       // to be deleted  playerCol.push(player.wallCollision);
     }
+
     // collidedCoin.pop();
   });
+
   // collidedCoin.pop();
 }
 
-// text pop up box
+// start Game
+$(".first-canvas").hide();
+
+$("#StartButton").click(function() {
+  $("#SplashScreen").hide();
+  $(".first-canvas").show();
+});
+
+// End Game
+function win() {
+  if (coinCounter === totalCoins) {
+    console.log("win");
+    youWinText();
+  }
+}
 
 function youWinText() {
-  ctx.fillStyle = "#7DFF00";
-  ctx.fillRect(x * 20, y * 20, 100, 100);
+  ctx.fillStyle = "rgba(0,0,0, 0.4)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = "80px Verdana";
   ctx.fillStyle = "white";
 
-  ctx.fillText("You WIN!", 10, 90);
+  ctx.fillText("You WIN", 400, canvas.height / 2);
+  ctx.font = "40px Verdana";
+  ctx.fillStyle = "#C9D6D4";
+  ctx.fillText("Please refresh page to start over", 300, 350);
 }
 
 // Collision detection
