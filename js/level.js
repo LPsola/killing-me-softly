@@ -55,7 +55,7 @@ var player = {
   height: 30,
   speedX: 1,
   speedY: 1,
-  acceleration: 0.2,
+  acceleration: 0.8,
   maxSpeed: 5,
   color: "#FF6714",
   wallCollision: false,
@@ -109,7 +109,7 @@ function FireBall(myX, myY, myW, myH) {
   this.gravitySpeed = 0;
   this.update = function() {
     this.newPos = function() {
-      this.gravitySpeed = 0.7;
+      this.gravitySpeed = 0.5;
       this.x += this.speedX;
       this.y += this.speedY + this.gravitySpeed;
     };
